@@ -11,7 +11,7 @@ class Person {
     int tiredness;          // βαθμός κούρασης
     public:
         Person(const char* init_name, short init_floor_num, short init_classroom_num); // Constructor
-        ~Person() = 0;
+        virtual ~Person() = 0;
         void set_in() { in = true; }                                                // Mutator
         std::string get_name() const { return name; }                               // +
         short get_floor_num() const { return floor_num; }                           // |  Accessors
