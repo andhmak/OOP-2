@@ -70,6 +70,13 @@ Teacher::~Teacher() {
 // Destructor
 Area::~Area() { }
 
+// Αφαιρεί τον μαθητή από τον χώρο και επιστρέφει δείκτη σε αυτόν, NULL αν δεν υπάρχει μαθητής
+Student* Area::exit() {
+    Student* to_return = student;
+    student = NULL;
+    return to_return;
+}
+
 // Συναρτήσεις της Yard
 
 // Βάζει τον μαθητή/όρισμα στην αυλή
@@ -78,7 +85,7 @@ void Yard::enter(Student& new_student) {
     Area::enter(new_student);
 }
 
-// Αφαιρεί τον τελευταίο μαθητή από τον διάδρομο και επιστρέφει δείκτη σε αυτόν
+// Αφαιρεί τον μαθητή από την αυλή και επιστρέφει δείκτη σε αυτόν, NULL αν δεν υπάρχει μαθητής
 Student* Yard::exit() {
     Student* exiting = Area::exit();
     cout << exiting->get_name() << " exits schoolyard!" << endl;
@@ -93,7 +100,7 @@ void Stairs::enter(Student& new_student) {
     Area::enter(new_student);
 }
 
-// Αφαιρεί τον τελευταίο μαθητή από τον διάδρομο και επιστρέφει δείκτη σε αυτόν
+// Αφαιρεί τον μαθητή από το κλιμακοστάσιο και επιστρέφει δείκτη σε αυτόν, NULL αν δεν υπάρχει μαθητής
 Student* Stairs::exit() {
     Student* exiting = Area::exit();
     cout << exiting->get_name() << " exits stairs!" << endl;
@@ -108,7 +115,7 @@ void Corridor::enter(Student& new_student) {
     Area::enter(new_student);
 }
 
-// Αφαιρεί τον τελευταίο μαθητή από τον διάδρομο και επιστρέφει δείκτη σε αυτόν
+// Αφαιρεί τον μαθητή από τον διάδρομο και επιστρέφει δείκτη σε αυτόν, NULL αν δεν υπάρχει μαθητής
 Student* Corridor::exit() {
     Student* exiting = Area::exit();
     cout << exiting->get_name() << " exits corridor!" << endl;
@@ -146,6 +153,7 @@ void Classroom::place(Teacher& teacher_in) {
     teacher_in.set_in();
 }
 
+// Βάζει τον δάσκαλο της τάξης να διδάξει (teach) και τους μαθητές να παρακολουθήσουν (attend) για hours ώρες
 void Classroom::operate(int hours) {
     if (teacher != NULL) {
         teacher->teach(hours);
@@ -169,10 +177,9 @@ void Classroom::print(short classroom_number) const {
 // Συναρτήσεις της Floor
 
 // Constructor
-Floor::Floor(int cclass) : corridor() {
-    for (char i = 0 ; i < 6 ; i++) {
-        classrooms[i] = new Classroom(cclass);
-    }
+Floor::Floor(int cclass)
+: classrooms{new Classroom(cclass), new Classroom(cclass), new Classroom(cclass), new Classroom(cclass), new Classroom(cclass), new Classroom(cclass)}
+{
     cout << "A New Floor has been created!" << endl;
 }
 
@@ -192,7 +199,8 @@ void Floor::enter(Student& student) {
     classrooms[student.get_classroom_num()]->enter(student);
 }
 
-void Floor::operate(int hours) {
+// Λειτουργεί (operate) όλες τις τάξεις του ορόφου για hours ώρες
+void Floor::operate(int hours) const {
     for (char i = 0 ; i < 6 ; i++) {
         classrooms[i]->operate(hours);
     }
@@ -209,12 +217,7 @@ void Floor::print(short floor_number) const {
 // Συναρτήσεις της School
 
 // Constructor
-School::School(int cclass)
-:   yard(), stairs()
-{
-    for (char i = 0 ; i < 3 ; i++) {
-        floors[i] = new Floor(cclass);
-    }
+School::School(int cclass) : floors{new Floor(cclass), new Floor(cclass), new Floor(cclass)} {
     cout << "A New School has been created!" << endl;
 }
 
@@ -236,7 +239,8 @@ void School::enter(Student& student) {
     floors[student.get_floor_num()]->enter(student);
 }
 
-void School::operate(int hours) {
+// Λειτουργεί (operate) όλους τους ορόφους του σχολείου για hours ώρες
+void School::operate(int hours) const {
     for (char i = 0 ; i < 3 ; i++) {
         floors[i]->operate(hours);
     }
