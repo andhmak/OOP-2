@@ -177,9 +177,10 @@ void Classroom::print(short classroom_number) const {
 // Συναρτήσεις της Floor
 
 // Constructor
-Floor::Floor(int cclass)
-: classrooms{new Classroom(cclass), new Classroom(cclass), new Classroom(cclass), new Classroom(cclass), new Classroom(cclass), new Classroom(cclass)}
-{
+Floor::Floor(int cclass) {
+    for (char i = 0 ; i < 6 ; i++) {
+        classrooms[i] = new Classroom(cclass);
+    }
     cout << "A New Floor has been created!" << endl;
 }
 
@@ -217,7 +218,10 @@ void Floor::print(short floor_number) const {
 // Συναρτήσεις της School
 
 // Constructor
-School::School(int cclass) : floors{new Floor(cclass), new Floor(cclass), new Floor(cclass)} {
+School::School(int cclass) {
+    for (char i = 0 ; i < 3 ; i++) {
+        floors[i] = new Floor(cclass);
+    }
     cout << "A New School has been created!" << endl;
 }
 
